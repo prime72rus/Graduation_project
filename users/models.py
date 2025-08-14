@@ -17,9 +17,11 @@ class UserManager(BaseUserManager):
             raise ValueError("The Email must be set")
 
         email = self.normalize_email(email)
+        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("role", "user")
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -28,7 +30,6 @@ class UserManager(BaseUserManager):
         """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("role", "admin")
 
         if extra_fields.get("is_staff") is not True:
@@ -48,22 +49,43 @@ class UserRoles(models.TextChoices):
 
 
 class User(AbstractUser):
+    """
+    Кастомная модель пользователя
+    """
     username = None
-    email = models.EmailField(verbose_name="Email адрес", unique=True)
-    first_name = models.CharField(verbose_name="Имя", max_length=150)
-    last_name = models.CharField(verbose_name="Фамилия", max_length=150)
-    phone = models.CharField(verbose_name="Номер телефона", max_length=20)
+    email = models.EmailField(
+        verbose_name="Email адрес",
+        unique=True,
+        help_text="Укажите свой Email адрес"
+    )
+    first_name = models.CharField(
+        verbose_name="Имя",
+        max_length=150,
+        help_text="Укажите имя"
+    )
+    last_name = models.CharField(
+        verbose_name="Фамилия",
+        max_length=150,
+        help_text="Укажите фамилию"
+    )
+    phone = models.CharField(
+        verbose_name="Номер телефона",
+        max_length=20,
+        help_text="Укажите номер телефона"
+    )
     role = models.CharField(
         verbose_name="Роль",
         max_length=20,
         choices=UserRoles.choices,
-        default=UserRoles.USER
+        default=UserRoles.USER,
+        help_text="Укажите роль"
     )
     image = models.ImageField(
         verbose_name="Аватар",
-        upload_to="users/avatars/",
+        upload_to="media/users/avatars/",
         null=True,
-        blank=True
+        blank=True,
+        help_text="Выберите аватарку"
     )
 
     USERNAME_FIELD = "email"

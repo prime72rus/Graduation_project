@@ -17,6 +17,7 @@ redis = "^6.4.0"
 django-cors-headers = "^4.7.0"
 gunicorn = "^23.0.0"
 django-filter = "^25.1"
+pillow = "^11.3.0"
 
 
 [tool.poetry.group.lint.dependencies]

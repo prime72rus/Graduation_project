@@ -1,39 +1,33 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_str, force_bytes
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.contrib.auth import get_user_model
-from django.core.mail import send_mail
-from django.urls import reverse
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import (
-    UserSerializer,
-    MyTokenObtainPairSerializer,
-    PasswordResetSerializer,
+from users.permissions import IsOwner
+from users.serializers import (
     PasswordResetConfirmSerializer,
+    PasswordResetSerializer,
+    UserSerializer,
 )
-from rest_framework_simplejwt.views import TokenObtainPairView
-
 
 User = get_user_model()
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
-
-
-class UserCreateView(generics.CreateAPIView):
+class UserCreateAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
 
 
 class PasswordResetView(generics.GenericAPIView):
     serializer_class = PasswordResetSerializer
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -62,7 +56,7 @@ class PasswordResetView(generics.GenericAPIView):
 
 class PasswordResetConfirmView(generics.GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -85,7 +79,44 @@ class PasswordResetConfirmView(generics.GenericAPIView):
                 {"detail": "Password has been reset successfully."}
             )
 
+        RefreshToken.for_user(user).blacklist()
+
         return Response(
             {"detail": "Invalid token or uid."},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
+
+class UserRetrieveAPIView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    lookup_field = "pk"
+
+
+class UserUpdateAPIView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    lookup_field = "pk"
+
+    def perform_update(self, serializer):
+        if "password" in serializer.validated_data:
+            user = serializer.save()
+            user.set_password(serializer.validated_data["password"])
+            user.save()
+        else:
+            serializer.save()
+
+
+class UserDestroyAPIView(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated, IsAdminUser)
+    lookup_field = "pk"

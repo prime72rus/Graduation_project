@@ -1,18 +1,27 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
+from rest_framework import serializers
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={"input_type": "password"},
+        min_length=8,
+        max_length=128,
+        validators=[validate_password],
+    )
+
     class Meta:
         model = User
         fields = (
             "id",
             "email",
+            "password",
             "first_name",
             "last_name",
             "phone",
@@ -20,15 +29,21 @@ class UserSerializer(serializers.ModelSerializer):
             "image",
         )
 
+    def validate_password(self, value):
+        validate_password(value)
+        return value
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token["email"] = user.email
-        token["role"] = user.role
-
-        return token
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        role = validated_data.get("role", "user")
+        if role == "admin":
+            return User.objects.create_user(
+                password=password, is_staff=True, **validated_data
+            )
+        else:
+            return User.objects.create_user(
+                password=password, **validated_data
+            )
 
 
 class PasswordResetSerializer(serializers.Serializer):

@@ -44,6 +44,7 @@ class UserRoles(models.TextChoices):
     """
     Класс для создания вариантов перечисляемых строк поля role.
     """
+
     USER = "user", "User"
     ADMIN = "admin", "Admin"
 
@@ -52,40 +53,37 @@ class User(AbstractUser):
     """
     Кастомная модель пользователя
     """
+
     username = None
     email = models.EmailField(
         verbose_name="Email адрес",
         unique=True,
-        help_text="Укажите свой Email адрес"
+        help_text="Укажите свой Email адрес",
     )
     first_name = models.CharField(
-        verbose_name="Имя",
-        max_length=150,
-        help_text="Укажите имя"
+        verbose_name="Имя", max_length=150, help_text="Укажите имя"
     )
     last_name = models.CharField(
-        verbose_name="Фамилия",
-        max_length=150,
-        help_text="Укажите фамилию"
+        verbose_name="Фамилия", max_length=150, help_text="Укажите фамилию"
     )
     phone = models.CharField(
         verbose_name="Номер телефона",
         max_length=20,
-        help_text="Укажите номер телефона"
+        help_text="Укажите номер телефона",
     )
     role = models.CharField(
         verbose_name="Роль",
         max_length=20,
         choices=UserRoles.choices,
         default=UserRoles.USER,
-        help_text="Укажите роль"
+        help_text="Укажите роль",
     )
     image = models.ImageField(
         verbose_name="Аватар",
         upload_to="media/users/avatars/",
         null=True,
         blank=True,
-        help_text="Выберите аватарку"
+        help_text="Выберите аватарку",
     )
 
     USERNAME_FIELD = "email"

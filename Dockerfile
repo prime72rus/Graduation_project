@@ -18,6 +18,9 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry config virtualenvs.create false && \
     poetry install --no-root --only main --no-interaction --no-ansi
 
+RUN mkdir -p /app/staticfiles && \
+    mkdir -p /app/media
+
 EXPOSE 8000
 
 COPY . .

@@ -30,7 +30,7 @@ class AdRetrieveAPIView(RetrieveAPIView):
 
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated,)
     lookup_field = "pk"
 
 

@@ -2,16 +2,9 @@ from django.urls import path
 
 from ads.apps import AdsConfig
 from ads.views import (
-    AdCreateAPIView,
-    AdDestroyAPIView,
-    AdListAPIView,
-    AdRetrieveAPIView,
-    AdUpdateAPIView,
-    ReviewCreateAPIView,
-    ReviewDestroyAPIView,
-    ReviewListAPIView,
-    ReviewRetrieveAPIView,
-    ReviewUpdateAPIView,
+    AdCreateAPIView, AdDestroyAPIView, AdListAPIView, AdRetrieveAPIView,
+    AdUpdateAPIView, ReviewCreateAPIView, ReviewDestroyAPIView,
+    ReviewListAPIView, ReviewRetrieveAPIView, ReviewUpdateAPIView
 )
 
 app_name = AdsConfig.name
@@ -46,5 +39,5 @@ urlpatterns = [
         "reviews/destroy/<int:pk>/",
         ReviewDestroyAPIView.as_view(),
         name="review_destroy",
-    )
+    ),
 ]

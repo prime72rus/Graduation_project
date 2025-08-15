@@ -5,7 +5,9 @@ from django.core.mail import send_mail
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from drf_spectacular.utils import (
-    OpenApiResponse, extend_schema, inline_serializer
+    OpenApiResponse,
+    extend_schema,
+    inline_serializer,
 )
 from rest_framework import generics, serializers, status
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
@@ -14,7 +16,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.permissions import IsOwner
 from users.serializers import (
-    PasswordResetConfirmSerializer, PasswordResetSerializer, UserSerializer
+    PasswordResetConfirmSerializer,
+    PasswordResetSerializer,
+    UserSerializer,
 )
 
 User = get_user_model()

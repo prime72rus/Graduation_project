@@ -13,6 +13,7 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("users/", include("users.urls", namespace="users")),
+    path("", include("ads.urls", namespace="ads_review"))
 ]
 
 if settings.DEBUG:

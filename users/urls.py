@@ -32,5 +32,5 @@ urlpatterns = [
     path("update/<int:pk>/", UserUpdateAPIView.as_view(), name="user_update"),
     path(
         "destroy/<int:pk>/", UserDestroyAPIView.as_view(), name="user_destroy"
-    ),
+    )
 ]

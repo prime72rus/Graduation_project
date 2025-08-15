@@ -1,6 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import (
-    CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
 )
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
@@ -12,6 +16,10 @@ from users.permissions import IsOwner
 
 
 class AdListAPIView(ListAPIView):
+    """
+    Запрос на получение списка объявлений.
+    """
+
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     pagination_class = AdPagination
@@ -20,6 +28,10 @@ class AdListAPIView(ListAPIView):
 
 
 class AdRetrieveAPIView(RetrieveAPIView):
+    """
+    Запрос на вывод детальной информации об объявлении.
+    """
+
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
@@ -27,12 +39,20 @@ class AdRetrieveAPIView(RetrieveAPIView):
 
 
 class AdCreateAPIView(CreateAPIView):
+    """
+    Запрос на создание объявления.
+    """
+
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = (IsAuthenticated,)
 
 
 class AdUpdateAPIView(UpdateAPIView):
+    """
+    Запрос на обновление объявления.
+    """
+
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
@@ -40,6 +60,10 @@ class AdUpdateAPIView(UpdateAPIView):
 
 
 class AdDestroyAPIView(DestroyAPIView):
+    """
+    Запрос на удаление объявления.
+    """
+
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
@@ -47,12 +71,20 @@ class AdDestroyAPIView(DestroyAPIView):
 
 
 class ReviewListAPIView(ListAPIView):
+    """
+    Запрос списка отзывов.
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated,)
 
 
 class ReviewRetrieveAPIView(RetrieveAPIView):
+    """
+    Запрос на вывод детальной информации об отзыве.
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated, IsAdminUser)
@@ -60,12 +92,20 @@ class ReviewRetrieveAPIView(RetrieveAPIView):
 
 
 class ReviewCreateAPIView(CreateAPIView):
+    """
+    Запрос на создание отзыва.
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated,)
 
 
 class ReviewUpdateAPIView(UpdateAPIView):
+    """
+    Запрос на обновление отзыва.
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
@@ -73,6 +113,10 @@ class ReviewUpdateAPIView(UpdateAPIView):
 
 
 class ReviewDestroyAPIView(DestroyAPIView):
+    """
+    Запрос на удаление отзыва.
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)

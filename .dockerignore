@@ -1,0 +1,9 @@
+**
+!config
+!users
+!ads
+!manage.py
+!poetry.lock
+!pyproject.toml
+!media
+!staticfiles

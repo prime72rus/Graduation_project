@@ -84,7 +84,7 @@ class User(AbstractUser):
     )
     image = models.ImageField(
         verbose_name="Аватар",
-        upload_to="media/users/avatars/",
+        upload_to="users/avatars/",
         null=True,
         blank=True,
         help_text="Выберите аватарку",

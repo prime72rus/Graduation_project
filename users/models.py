@@ -54,6 +54,8 @@ class User(AbstractUser):
     Кастомная модель пользователя
     """
 
+    id: models.AutoField
+
     username = None
     email = models.EmailField(
         verbose_name="Email адрес",

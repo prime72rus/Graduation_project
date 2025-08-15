@@ -12,7 +12,7 @@ class AdSerializer(serializers.ModelSerializer):
             "price",
             "description",
             "author",
-            "created_at"
+            "created_at",
         ]
 
 

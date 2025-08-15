@@ -6,6 +6,8 @@ class Ad(models.Model):
     Модель объявления
     """
 
+    id: models.AutoField
+
     title = models.CharField(
         verbose_name="Название товара",
         max_length=255,
@@ -43,6 +45,8 @@ class Review(models.Model):
     """
     Модель отзыва
     """
+
+    id: models.AutoField
 
     text = models.TextField(
         verbose_name="Отзыв на товар", help_text="Укажите текст отзыва"

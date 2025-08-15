@@ -8,7 +8,7 @@ from ads.filters import AdFilter
 from ads.models import Ad, Review
 from ads.pagination import AdPagination
 from ads.serializers import AdSerializer, ReviewSerializer
-from users.permissions import IsOwner
+from users.permissions import IsAuthor
 
 
 class AdListAPIView(ListAPIView):
@@ -30,7 +30,7 @@ class AdRetrieveAPIView(RetrieveAPIView):
 
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"
 
 
@@ -51,7 +51,7 @@ class AdUpdateAPIView(UpdateAPIView):
 
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"
 
 
@@ -62,7 +62,7 @@ class AdDestroyAPIView(DestroyAPIView):
 
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"
 
 
@@ -104,7 +104,7 @@ class ReviewUpdateAPIView(UpdateAPIView):
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"
 
 
@@ -115,5 +115,5 @@ class ReviewDestroyAPIView(DestroyAPIView):
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"

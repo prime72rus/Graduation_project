@@ -14,7 +14,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.permissions import IsOwner
+from users.permissions import IsAuthor
 from users.serializers import (
     PasswordResetConfirmSerializer,
     PasswordResetSerializer,
@@ -151,7 +151,7 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"
 
 
@@ -162,7 +162,7 @@ class UserUpdateAPIView(generics.UpdateAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
+    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
     lookup_field = "pk"
 
     def perform_update(self, serializer):

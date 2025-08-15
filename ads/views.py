@@ -43,6 +43,13 @@ class AdCreateAPIView(CreateAPIView):
     serializer_class = AdSerializer
     permission_classes = (IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        """
+        Добавление пользователя как автора при создании объявления.
+        """
+
+        serializer.save(author=self.request.user)
+
 
 class AdUpdateAPIView(UpdateAPIView):
     """
@@ -95,6 +102,13 @@ class ReviewCreateAPIView(CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        """
+        Добавление пользователя как автора при создании отзыва.
+        """
+
+        serializer.save(author=self.request.user)
 
 
 class ReviewUpdateAPIView(UpdateAPIView):

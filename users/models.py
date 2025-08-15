@@ -61,14 +61,10 @@ class User(AbstractUser):
         help_text="Укажите свой Email адрес",
     )
     first_name = models.CharField(
-        verbose_name="Имя",
-        max_length=150,
-        help_text="Укажите имя"
+        verbose_name="Имя", max_length=150, help_text="Укажите имя"
     )
     last_name = models.CharField(
-        verbose_name="Фамилия",
-        max_length=150,
-        help_text="Укажите фамилию"
+        verbose_name="Фамилия", max_length=150, help_text="Укажите фамилию"
     )
     phone = models.CharField(
         verbose_name="Номер телефона",

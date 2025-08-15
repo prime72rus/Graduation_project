@@ -4,31 +4,55 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from rest_framework import generics, status
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from drf_spectacular.utils import (
+    OpenApiResponse, extend_schema, inline_serializer
+)
+from rest_framework import generics, serializers, status
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.permissions import IsOwner
 from users.serializers import (
-    PasswordResetConfirmSerializer,
-    PasswordResetSerializer,
-    UserSerializer,
+    PasswordResetConfirmSerializer, PasswordResetSerializer, UserSerializer
 )
 
 User = get_user_model()
 
 
 class UserCreateAPIView(generics.CreateAPIView):
+    """
+    Регистрация пользователя.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
 
 class PasswordResetView(generics.GenericAPIView):
+    """
+    Запрос на отправку ссылки для сброса пароля на указанный Email.
+    """
+
     serializer_class = PasswordResetSerializer
     permission_classes = (AllowAny,)
 
+    @extend_schema(
+        request=PasswordResetSerializer,
+        responses={
+            200: OpenApiResponse(
+                response=inline_serializer(
+                    name="PasswordResetSuccessResponse",
+                    fields={
+                        "detail": serializers.CharField(
+                            default="Password reset e-mail has been sent."
+                        )
+                    },
+                )
+            )
+        },
+    )
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -55,9 +79,28 @@ class PasswordResetView(generics.GenericAPIView):
 
 
 class PasswordResetConfirmView(generics.GenericAPIView):
+    """
+    Запрос на подтверждение сброса и установки нового пароля.
+    """
+
     serializer_class = PasswordResetConfirmSerializer
     permission_classes = (AllowAny,)
 
+    @extend_schema(
+        request=PasswordResetConfirmSerializer,
+        responses={
+            200: OpenApiResponse(
+                response=inline_serializer(
+                    name="PasswordResetConfirmView",
+                    fields={
+                        "detail": serializers.CharField(
+                            default="Password has been reset successfully."
+                        )
+                    },
+                )
+            )
+        },
+    )
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -88,12 +131,20 @@ class PasswordResetConfirmView(generics.GenericAPIView):
 
 
 class UserListAPIView(generics.ListAPIView):
+    """
+    Запрос на вывод списка пользователей.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUser)
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Запрос на вывод детальной информации по пользователю.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
@@ -101,6 +152,10 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
+    """
+    Запрос на обновление пользователя.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUser | IsOwner)
@@ -116,6 +171,10 @@ class UserUpdateAPIView(generics.UpdateAPIView):
 
 
 class UserDestroyAPIView(generics.DestroyAPIView):
+    """
+    Запрос на удаление пользователя.
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUser)

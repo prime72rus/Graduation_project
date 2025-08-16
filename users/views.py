@@ -10,11 +10,12 @@ from drf_spectacular.utils import (
     inline_serializer,
 )
 from rest_framework import generics, serializers, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.permissions import IsAuthor
+from users.permissions import IsAdminOrAuthor
 from users.serializers import (
     PasswordResetConfirmSerializer,
     PasswordResetSerializer,
@@ -122,11 +123,15 @@ class PasswordResetConfirmView(generics.GenericAPIView):
         ):
             user.set_password(serializer.validated_data["new_password"])
             user.save()
+
+            try:
+                RefreshToken.for_user(user).blacklist()
+            except Exception:
+                pass
+
             return Response(
                 {"detail": "Password has been reset successfully."}
             )
-
-        RefreshToken.for_user(user).blacklist()
 
         return Response(
             {"detail": "Invalid token or uid."},
@@ -151,7 +156,7 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated, IsAdminOrAuthor)
     lookup_field = "pk"
 
 
@@ -162,10 +167,18 @@ class UserUpdateAPIView(generics.UpdateAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated, IsAdminOrAuthor)
     lookup_field = "pk"
 
     def perform_update(self, serializer):
+
+        if (
+            "role" in serializer.validated_data
+            and not self.request.user.is_staff
+        ):
+            raise PermissionDenied(
+                "Изменение роли доступно только администратору."
+            )
         if "password" in serializer.validated_data:
             user = serializer.save()
             user.set_password(serializer.validated_data["password"])

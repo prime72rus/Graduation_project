@@ -1,8 +1,10 @@
 from rest_framework import permissions
 
+from users.models import User
 
-class IsAuthor(permissions.BasePermission):
+
+class IsAdminOrAuthor(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if obj.author is None:
-            return False
-        return obj.author == request.user
+        if isinstance(obj, User):
+            return request.user.is_staff or obj == request.user
+        return request.user.is_staff or obj.author == request.user

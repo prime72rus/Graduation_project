@@ -18,10 +18,13 @@ class UserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault("role", "user")
+        if extra_fields.get("role") == "admin":
+            extra_fields["is_staff"] = True
+        else:
+            extra_fields["is_staff"] = False
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
     def create_superuser(self, email, password, **extra_fields):

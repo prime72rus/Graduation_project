@@ -14,9 +14,11 @@ class AdSerializer(serializers.ModelSerializer):
             "author",
             "created_at",
         ]
+        read_only_fields = ("author",)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ["id", "text", "author", "ad", "created_at"]
+        read_only_fields = ("author",)

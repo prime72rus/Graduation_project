@@ -9,6 +9,7 @@ from django.http import JsonResponse
 def health_check(request):
     return JsonResponse({"status": "ok"})
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -18,7 +19,7 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("users/", include("users.urls", namespace="users")),
-    path("", include("ads.urls", namespace="ads_review")),
+    path("", include("ads.urls", namespace="ads_reviews")),
     path('health/', health_check)
 ]
 

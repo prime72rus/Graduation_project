@@ -1,6 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import (
-    CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
 )
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
@@ -8,7 +12,7 @@ from ads.filters import AdFilter
 from ads.models import Ad, Review
 from ads.pagination import AdPagination
 from ads.serializers import AdSerializer, ReviewSerializer
-from users.permissions import IsAuthor
+from users.permissions import IsAdminOrAuthor
 
 
 class AdListAPIView(ListAPIView):
@@ -58,7 +62,7 @@ class AdUpdateAPIView(UpdateAPIView):
 
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated, IsAdminOrAuthor)
     lookup_field = "pk"
 
 
@@ -69,7 +73,7 @@ class AdDestroyAPIView(DestroyAPIView):
 
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated, IsAdminOrAuthor)
     lookup_field = "pk"
 
 
@@ -118,7 +122,7 @@ class ReviewUpdateAPIView(UpdateAPIView):
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated, IsAdminOrAuthor)
     lookup_field = "pk"
 
 
@@ -129,5 +133,5 @@ class ReviewDestroyAPIView(DestroyAPIView):
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated, IsAdminUser | IsAuthor)
+    permission_classes = (IsAuthenticated, IsAdminOrAuthor)
     lookup_field = "pk"

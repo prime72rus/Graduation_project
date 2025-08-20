@@ -18,8 +18,8 @@
 
 ## 🛠 Технологии
 
-- **Python 3.11**
-- **Django 5.2**
+- **Python 3.13.0**
+- **Django 5.2.5**
 - **Django REST Framework (DRF)**
 - **JWT-аутентификация** (`simplejwt`)
 - **PostgreSQL** — основная БД
@@ -137,13 +137,15 @@
   - Валидация данных (цена ≥ 0, пароль).
   - Сброс пароля (email, токен).  
 Для их запуска выполните команду:
-```sh
-  coverage run --source='.' manage.py test   
-```  
-Для получения отчета о тестировании выполните команду:
-```sh
-  coverage html   
-```
+   ```bash
+   coverage run --source='.' manage.py test   
+   ```  
+Для получения отчета о тестировании выполните команду:  
+
+```bash
+    coverage html   
+  ``` 
+
 Отчет расположен по пути `htmlcov/index.html`
 
 ---
@@ -231,7 +233,7 @@
    git clone https://github.com/prime72rus/Graduation_project.git
    ```
    ```bash
-   cd ads-board
+      cd ads-board
    ```
 2. Установите зависимости:
    ```bash

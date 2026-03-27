@@ -1,12 +1,22 @@
 [tool.poetry]
 name = "graduation-project"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Backend-часть для сайта объявлений"
+authors = ["Dmitrii Grechko <prime72rus@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
+django = "^5.2.5"
+djangorestframework = "^3.16.1"
+psycopg2 = "^2.9.10"
+python-dotenv = "^1.1.1"
+djangorestframework-simplejwt = "^5.5.1"
+drf-spectacular = {extras = ["sidecar"], version = "^0.28.0"}
+django-cors-headers = "^4.7.0"
+gunicorn = "^23.0.0"
+django-filter = "^25.1"
+pillow = "^11.3.0"
 
 
 [tool.poetry.group.lint.dependencies]
@@ -15,6 +25,26 @@ isort = "^6.0.1"
 flake8 = "^7.3.0"
 black = "^25.1.0"
 
+
+[tool.poetry.group.dev.dependencies]
+django-stubs = "^5.2.2"
+djangorestframework-stubs = "^3.16.1"
+coverage = "^7.10.3"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+exclude = '''
+(
+  /(
+      \.git
+  )/
+)
+'''
+
+[tool.isort]
+line_length = 79
+multi_line_output = 5
